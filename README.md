@@ -20,15 +20,15 @@ The plugin allows server owners to assign different sounds to players with certa
   "SoundSettings": [
     {
       "SteamID64": "76561198134597930",
-      "Sound": "sounds/training/steam_bell"
+      "Sound": "sounds/training/timer_bell"
     },
     {
       "Flag": "@css/admin",
-      "Sound": "sounds/training/vip_bell"
+      "Sound": "sounds/training/timer_bell"
     },
     {
       "Flag": "@css/vip",
-      "Sound": "sounds/training/vip_bell"
+      "Sound": "sounds/training/timer_bell.vsnd"
     }
   ],
   "ConfigVersion": 1
