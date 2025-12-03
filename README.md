@@ -16,19 +16,22 @@ The plugin allows server owners to assign different sounds to players with certa
 **Example config:**
 ```json
 {
-  // PLEASE FOLLOW ORDER OF IMPORTANCE: SteamID64 -> Highest flag -> Lowest flag
+  // PLEASE FOLLOW ORDER OF IMPORTANCE: SteamID64 -> Highest flag -> Lowest flag -> Default
   "SoundSettings": [
     {
-      "SteamID64": "76561198134597930",
+      "SteamID64": "76561198134597930", // with steamid
       "Sound": "sounds/training/timer_bell"
     },
     {
-      "Flag": "@css/admin",
+      "Flag": "@css/admin", // with flag
       "Sound": "sounds/training/timer_bell"
     },
     {
-      "Flag": "@css/vip",
+      "Flag": "@css/vip", // with flag
       "Sound": "sounds/training/timer_bell.vsnd"
+    },
+    {
+      "Sound": "sounds/training/timer_bell.vsnd" // Default
     }
   ],
   "ConfigVersion": 1
@@ -49,3 +52,14 @@ The plugin allows server owners to assign different sounds to players with certa
 </div>
 
 ---
+
+## 💖 Support My Work
+
+<div align="center">
+  <a href="https://www.paypal.com/paypalme/PeliluolaCS2">
+    <img src="https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Donate via PayPal" />
+  </a>
+  <a href="https://buy.stripe.com/cN2dThbavflW05G7sz">
+    <img src="https://img.shields.io/badge/Donate-Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white" alt="Donate via Stripe" />
+  </a>
+</div>

@@ -31,7 +31,6 @@ public class JoinsoundsConfig : BasePluginConfig
         },
         new SoundSetting
         {
-            Flag = "@css/vip",
             Sound = "sounds/training/timer_bell"
         }
     };
@@ -53,7 +52,7 @@ public class Joinsounds : BasePlugin, IPluginConfig<JoinsoundsConfig>
     public override string ModuleName => "Joinsounds";
     public override string ModuleDescription => "Notification VIP/ADMIN join sound for cs2";
     public override string ModuleAuthor => "verneri";
-    public override string ModuleVersion => "1.0";
+    public override string ModuleVersion => "1.2";
 
     public JoinsoundsConfig Config { get; set; } = new();
 
@@ -69,37 +68,49 @@ public class Joinsounds : BasePlugin, IPluginConfig<JoinsoundsConfig>
     [GameEventHandler(HookMode.Pre)]
     public HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
     {
-        if (@event == null) return HookResult.Handled;
+        if (@event == null) return HookResult.Continue;
         var player = @event.Userid;
 
-        Playjoinsound();
+        Playjoinsound(player);
 
-        return HookResult.Handled;
+        return HookResult.Continue;
     }
 
-    public void Playjoinsound()
+    public void Playjoinsound(CCSPlayerController? player)
     {
-        foreach (var player in Utilities.GetPlayers().Where(p => !p.IsHLTV && !p.IsBot && p.PlayerPawn.IsValid))
+        if (player == null || player.IsHLTV || player.IsBot || !player.PlayerPawn.IsValid)
+            return;
+
+        string? soundToPlay = null;
+
+        foreach (var setting in Config.SoundSettings)
         {
-            foreach (var setting in Config.SoundSettings)
+            if (!string.IsNullOrEmpty(setting.SteamID64) &&
+                player.SteamID.ToString() == setting.SteamID64)
             {
-                if (!string.IsNullOrEmpty(setting.Flag) && AdminManager.PlayerHasPermissions(player, setting.Flag))
-                {
-                    foreach (var allPlayer in Utilities.GetPlayers().Where(p => !p.IsHLTV && !p.IsBot && p.PlayerPawn.IsValid))
-                    {
-                        allPlayer.ExecuteClientCommand($"play {setting.Sound}");
-                    }
-                    break;
-                }
-                else if (!string.IsNullOrEmpty(setting.SteamID64) && player.SteamID.ToString() == setting.SteamID64)
-                {
-                    foreach (var allPlayer in Utilities.GetPlayers().Where(p => !p.IsHLTV && !p.IsBot && p.PlayerPawn.IsValid))
-                    {
-                        allPlayer.ExecuteClientCommand($"play {setting.Sound}");
-                    }
-                    break;
-                }
+                soundToPlay = setting.Sound;
+                break;
             }
+
+            if (!string.IsNullOrEmpty(setting.Flag) &&
+                AdminManager.PlayerHasPermissions(player, setting.Flag))
+            {
+                soundToPlay = setting.Sound;
+                break;
+            }
+
+            if (string.IsNullOrEmpty(setting.SteamID64) && string.IsNullOrEmpty(setting.Flag))
+            {
+                soundToPlay = setting.Sound;
+            }
+        }
+
+        if (soundToPlay == null)
+            return;
+
+        foreach (var allPlayer in Utilities.GetPlayers().Where(p => !p.IsHLTV && !p.IsBot))
+        {
+            allPlayer.ExecuteClientCommand("play " + soundToPlay);
         }
     }
 
